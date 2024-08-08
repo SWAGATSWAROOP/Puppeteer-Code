@@ -11,7 +11,6 @@ const fs = require("fs");
   });
   const page = await browser.newPage();
 
-  // Set a higher timeout for navigation
   page.setDefaultNavigationTimeout(60000);
 
   // Set geolocation to New Delhi, India
@@ -23,19 +22,16 @@ const fs = require("fs");
     "geolocation",
   ]);
 
-  // Navigate to the page with an increased timeout
   await page.goto("https://www.tripadvisor.in", {
     waitUntil: "networkidle2",
     timeout: 0,
   });
 
-  // Wait for the search box and type "Dubai"
   await page.waitForSelector('input[name="q"]');
   await page.type('input[name="q"]', "Dubai", { delay: 100 });
 
-  await page.screenshot({ path: "search1.png", fullPage: true });
+  await page.screenshot({ path: "search.png", fullPage: true });
 
-  // Submit the search using the Enter key and wait for navigation
   await Promise.all([
     page.keyboard.press("Enter"),
     page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 }), // Increased timeout
@@ -51,10 +47,8 @@ const fs = require("fs");
   //   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   //   await wait(5000); // Wait for an additional 5 seconds
 
-  // Take a screenshot after ensuring all content is fully loaded
   await page.screenshot({ path: "search_results.png", fullPage: false });
 
-  // Save the page HTML
   const html = await page.content();
   const filePath = "./search.html";
   fs.writeFileSync(filePath, html);
